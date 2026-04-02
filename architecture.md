@@ -465,3 +465,272 @@ The system integrates:
 * logging and monitoring
 
 This architecture provides a foundation for building **scalable, reliable, and production-ready AI applications**.
+
+# 16. Database ER Diagram
+
+The database schema supports the full lifecycle of AI task execution, including user queries, agent execution tracking, results storage, and system logging.
+
+```
++-------------------+
+|       USERS       |
++-------------------+
+| user_id (PK)      |
+| email             |
+| created_at        |
++-------------------+
+          |
+          | 1
+          |
+          | *
++-------------------+
+|       TASKS       |
++-------------------+
+| task_id (PK)      |
+| user_id (FK)      |
+| query             |
+| status            |
+| created_at        |
++-------------------+
+          |
+          | 1
+          |
+          | *
++-------------------+
+|    AGENT_RUNS     |
++-------------------+
+| agent_run_id (PK) |
+| task_id (FK)      |
+| agent_name        |
+| execution_time    |
+| status            |
++-------------------+
+
+          |
+          | 1
+          |
+          | 1
++-------------------+
+|      RESULTS      |
++-------------------+
+| result_id (PK)    |
+| task_id (FK)      |
+| output            |
+| confidence_score  |
++-------------------+
+
+          |
+          | 1
+          |
+          | *
++-------------------+
+|        LOGS       |
++-------------------+
+| log_id (PK)       |
+| task_id (FK)      |
+| event             |
+| timestamp         |
++-------------------+
+```
+
+### Explanation
+
+This schema allows the system to:
+
+* store user queries
+* track execution of each AI agent
+* store generated results
+* log system events for debugging and monitoring
+
+Each **task acts as the central entity** connecting agents, results, and logs.
+
+---
+
+# 17. Agent Workflow Diagram
+
+The following diagram illustrates the high-level workflow of the multi-agent AI system.
+
+```
+                +------------------+
+                |      USER        |
+                +---------+--------+
+                          |
+                          v
+                +------------------+
+                |      API LAYER   |
+                +---------+--------+
+                          |
+                          v
+                +------------------+
+                |  WORKFLOW ENGINE |
+                +---------+--------+
+                          |
+          +---------------+---------------+
+          |                               |
+          v                               v
++--------------------+        +--------------------+
+|   RESEARCH AGENT   |        |     DATA AGENT     |
++---------+----------+        +----------+---------+
+          |                              |
+          v                              v
++--------------------+        +--------------------+
+|   VECTOR DATABASE  |        |    SQL DATABASE    |
++---------+----------+        +----------+---------+
+          \                              /
+           \                            /
+            \                          /
+             v                        v
+             +------------------------+
+             |    REASONING AGENT     |
+             +-----------+------------+
+                         |
+                         v
+                +------------------+
+                |   GUARDRAILS     |
+                +---------+--------+
+                          |
+                          v
+                +------------------+
+                |   REPORT AGENT   |
+                +---------+--------+
+                          |
+                          v
+                +------------------+
+                |    FINAL RESULT  |
+                +------------------+
+```
+
+### Explanation
+
+The workflow begins with a user query submitted through the API.
+The workflow engine coordinates multiple agents:
+
+1. The **Research Agent** retrieves contextual knowledge from the vector database.
+2. The **Data Agent** performs structured analysis on SQL datasets.
+3. The **Reasoning Agent** synthesizes outputs from both agents.
+4. **Guardrails** validate the generated content.
+5. The **Report Agent** produces the final response.
+
+This workflow enables **collaborative AI reasoning**.
+
+---
+
+# 18. System Sequence Diagram
+
+The sequence diagram illustrates how system components interact during task execution.
+
+```
+User
+ │
+ │ Submit Query
+ ▼
+API Layer
+ │
+ │ Create Task
+ ▼
+Database
+ │
+ │ Start Workflow
+ ▼
+Workflow Orchestrator
+ │
+ │ Trigger Research Agent
+ ▼
+Research Agent
+ │
+ │ Retrieve Documents
+ ▼
+Vector Database
+ │
+ │ Return Context
+ ▼
+Reasoning Agent
+ │
+ │ Trigger Data Agent
+ ▼
+Data Agent
+ │
+ │ Analyze Dataset
+ ▼
+SQL Database
+ │
+ │ Return Insights
+ ▼
+Reasoning Agent
+ │
+ │ Combine Insights
+ ▼
+Guardrail Layer
+ │
+ │ Validate Output
+ ▼
+Report Agent
+ │
+ │ Store Result
+ ▼
+Database
+ │
+ │ Return Response
+ ▼
+API Layer
+ │
+ ▼
+User Receives Result
+```
+
+### Explanation
+
+This sequence diagram describes the **runtime interaction of system components**.
+
+The lifecycle consists of:
+
+1. User query submission
+2. Task creation
+3. Agent execution
+4. Knowledge retrieval
+5. Data analysis
+6. reasoning synthesis
+7. guardrail validation
+8. result storage and response delivery
+
+The structured interaction ensures that the AI system remains **deterministic, observable, and reliable**.
+
+---
+
+# 19. Architectural Benefits
+
+This system architecture provides several advantages:
+
+### Modular Design
+
+Each agent performs a specialized function, making the system easy to extend.
+
+### Observability
+
+Detailed logging ensures that every task execution can be monitored and debugged.
+
+### Reliability
+
+Fallback mechanisms and guardrails prevent system failures and unsafe outputs.
+
+### Scalability
+
+The architecture allows agents and databases to scale independently.
+
+---
+
+# 20. Conclusion
+
+The AI Research & Decision Engine demonstrates how modern AI applications can be built using **multi-agent architectures combined with reliable backend infrastructure**.
+
+The system integrates:
+
+* AI orchestration
+* relational database management
+* vector search
+* safety guardrails
+* fallback pipelines
+* workflow management
+* system monitoring
+
+This architecture provides a strong foundation for building **scalable, reliable, and production-grade AI systems**.
+
